@@ -6,7 +6,6 @@ import {
 } from "@/func/product/productType";
 import { MeQuery, useDeleteProductMutation } from "@/gen/gql";
 import { Reference, StoreObject } from "@apollo/client";
-import Link from "next/link";
 import { useState } from "react";
 import EntryCreate from "../Entry/EntryCreate";
 import TagList from "../TagList";
@@ -74,7 +73,7 @@ const ProductCard = ({ pathname, data, user }: Props) => {
             products(ctx = [], { readField }) {
               return ctx.filter(
                 (ref: Reference | StoreObject | undefined) =>
-                  id !== readField("id", ref)
+                  id !== readField("id", ref),
               );
             },
           },
@@ -99,7 +98,7 @@ const ProductCard = ({ pathname, data, user }: Props) => {
                 >
                   Nro. {q.id}
                 </div>
-                {user.me?.isAccess && (
+                {
                   <div className="d-flex">
                     <div
                       onClick={() => setSupplier(q.id)}
@@ -138,7 +137,7 @@ const ProductCard = ({ pathname, data, user }: Props) => {
                       <div className="flex--item -link">Salida</div>
                     </div>
                   </div>
-                )}
+                }
               </div>
 
               <EntryCreate
@@ -184,7 +183,7 @@ const ProductCard = ({ pathname, data, user }: Props) => {
                 >
                   Nro. {q.id}
                 </div>
-                {user.me?.isAccess && (
+                {
                   <div className="d-flex">
                     <div
                       onClick={() => setWithdrawal(q.id)}
@@ -205,7 +204,7 @@ const ProductCard = ({ pathname, data, user }: Props) => {
                       <div className="flex--item -link">Salida</div>
                     </div>
                   </div>
-                )}
+                }
               </div>
               <WithdrawalCreate
                 handleClose={() => setWithdrawal(null)}
@@ -229,14 +228,12 @@ const ProductCard = ({ pathname, data, user }: Props) => {
           <div key={q.id} className={"s-post-summary"}>
             <div className="s-post-summary--content w100">
               <div className="s-post-summary--content-title mb2 d-flex">
-                <Link
-                  passHref
-                  legacyBehavior
-                  href={`/products/[productId]`}
-                  as={`/products/${q.id}`}
+                <div
+                  // href={`/products/[productId]`}
+                  // as={`/products/${q.id}`}
                 >
                   <a className="s-link">{q.title}</a>
-                </Link>
+                </div>
 
                 <div
                   className="flex__item s-link ml8"
@@ -301,7 +298,6 @@ const ProductCard = ({ pathname, data, user }: Props) => {
                         Eliminar
                       </div>
                     </div>
-                    
                   </div>
                 </div>
               )}

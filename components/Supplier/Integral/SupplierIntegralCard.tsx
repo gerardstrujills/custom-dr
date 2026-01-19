@@ -1,15 +1,13 @@
-import React, { useState } from "react";
-import Link from "next/link";
 import CardEmpty from "@/components/CardEmpty";
-import ItemEntryCard from "@/components/Entry/ItemEntryCard";
 import EntryUpdate from "@/components/Entry/EntryUpdate";
+import ItemEntryCard from "@/components/Entry/ItemEntryCard";
 import {
   MeQuery,
   SupplierDocument,
   SupplierQuery,
   useDeleteEntryMutation,
 } from "@/gen/gql";
-import { gql, Reference, StoreObject } from "@apollo/client";
+import { useState } from "react";
 
 type Entry = {
   id: number;
@@ -62,7 +60,7 @@ const SupplierIntegralCard = ({ pathname, entry, supplier, user }: Props) => {
         });
 
         const updatedEntries = existingData?.supplier?.entry.filter(
-          (entry) => entry.id !== id
+          (entry) => entry.id !== id,
         );
 
         cache.writeQuery({
@@ -88,14 +86,9 @@ const SupplierIntegralCard = ({ pathname, entry, supplier, user }: Props) => {
           <div key={q.id} className={"s-post-summary"}>
             <div className="s-post-summary--content w100">
               <div className="s-post-summary--content-title mb2 d-flex">
-                <Link
-                  passHref
-                  legacyBehavior
-                  href={`/products/[productId]`}
-                  as={`/products/${q.id}`}
-                >
+                <div>
                   <a className="s-link">{q.product.title}</a>
-                </Link>
+                </div>
 
                 <div
                   className="flex__item s-link ml8"
