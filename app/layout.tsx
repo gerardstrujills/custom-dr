@@ -1,9 +1,9 @@
+import { AuthRedirectHandler } from "@/components/Auth/AuthRedirectHandler";
 import type { Metadata } from "next";
 import "./globals.css";
-import { AuthRedirectHandler } from "@/components/Auth/AuthRedirectHandler";
 
 export const metadata: Metadata = {
-  title: "Multiservicios Catunta E.I.R.L.",
+  title: "D&R Servicios Generales",
 };
 
 export default function RootLayout({
