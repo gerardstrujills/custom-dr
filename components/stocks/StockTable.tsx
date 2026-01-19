@@ -85,7 +85,7 @@ export const StockTable = ({ data, loading, error }: Props) => {
                 </div>
               </td>
               <td className="text-sm">
-                {`METODOLOGIA ${item.description}` || "-"}
+                {`${item.description}` || "-"}
               </td>
               <td className="ta-right">
                 <span

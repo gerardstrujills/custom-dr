@@ -93,6 +93,7 @@ export default function DocEntries({ tab, data }: Props) {
             "U/M": product.unitOfMeasurement,
             "Tipo Material": product.materialType,
             Cantidad: entry.quantity,
+            "Proyecto Salida": entry.title,
             "Fecha Salida": entry.endTime,
           }));
         })

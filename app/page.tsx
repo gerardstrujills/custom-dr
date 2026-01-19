@@ -6,7 +6,6 @@ import { toErrorMap } from "@/utils/toErrorMap";
 import { Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
-import React from "react";
 
 type Props = {};
 
@@ -17,7 +16,13 @@ const page = (props: Props) => {
     <div className="d-flex jc-center ai-center mt64">
       <div className="d-flex ai-center jc-center sm:fd-column-reverse">
         <div className="flex--item fs-body2  sm:mb0 ">
-          <img src="https://d1.awsstatic.com/webteam/Console_Signout_Page_Images/may-2021/Site-Merch_SageMaker-Adoption-Campaign_Editorial%20(5)(ex-4)%20(1).082226f6ea0917175e52004eb595ce80a4dc3017.png" width={400} height={250} />
+          <img
+            src="/logo.png"
+            style={{
+              width: 300,
+            }}
+            alt="Logo"
+          />
         </div>
         <div className="flex--item flex--item5 fl-shrink0">
           <div className="mx-auto mb24 p48 sm:p32 bg-white bar-lg bs-xl">
@@ -49,8 +54,15 @@ const page = (props: Props) => {
                   <h1 className="flex--item fs-headline1 fw-bold lh-xs mb8 ws-nowrap">
                     Iniciar Sesión
                   </h1>
-                  <div className="flex--item js-terms fs-caption fc-black-400 ta-left">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus, fugit cumque voluptatibus molestias numquam quod.
+                  <div
+                    className="flex--item js-terms fs-caption ta-left"
+                    style={{
+                      color: "white",
+                      margin: "-8px"
+                    }}
+                  >
+                    El sistema de Gestion de Almacen permite gestionar de forma
+                    eficiente el control de inventarios, ingre
                   </div>
                   <InputField
                     name="usernameOrEmail"

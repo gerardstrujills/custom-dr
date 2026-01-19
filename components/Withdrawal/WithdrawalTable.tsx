@@ -118,7 +118,7 @@ export const WithdrawalTable = ({ data, loading, error }: Props) => {
                 </div>
               </td>
               <td className="text-sm">
-                {item.description ? `METODOLOGIA ${item.description}` : "-"}
+                {item.description ? `${item.description}` : "-"}
               </td>
               <td className="ta-right">
                 <span

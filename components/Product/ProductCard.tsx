@@ -249,7 +249,7 @@ const ProductCard = ({ pathname, data, user }: Props) => {
               <div className="d-flex">
                 <div className="flex--item fl1 ">
                   {q.description && (
-                    <span className="fc-black-400 mr2">METODOLOGIA {q.description}</span>
+                    <span className="fc-black-400 mr2">{q.description}</span>
                   )}
                 </div>
                 <div className="ml12 aside-cta flex--item">

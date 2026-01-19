@@ -1,6 +1,6 @@
 import { MeQuery, useLogoutMutation } from "@/gen/gql";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import Loading from "./Loading";
 
@@ -10,6 +10,7 @@ const LeftSidebar: React.FC<{
 }> = ({ dataIsHereWhen }) => {
   const pathname = usePathname();
   const [logout, { client, loading }] = useLogoutMutation();
+  const router = useRouter()
 
   return (
     <>
@@ -134,6 +135,7 @@ const LeftSidebar: React.FC<{
                   onClick={async () => {
                     await logout();
                     await client.resetStore();
+                    router.push("/")
                   }}
                 >
                   <div className="s-link s-link d-flex fl-grow1 fc-black-400 h:fc-black-600 fs-fine">
