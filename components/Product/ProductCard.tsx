@@ -262,7 +262,6 @@ const ProductCard = ({ pathname, data, user }: Props) => {
 
               {user.me != null && user.me != undefined && user.me.isAccess ? (
                 <div className="s-post-summary--meta mt4">
-                  aaa
                   <div
                     onClick={() => setSupplier(q.id)}
                     className="s-link s-user-card--link d-flex gs4 ml4"
