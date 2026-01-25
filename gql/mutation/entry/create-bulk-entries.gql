@@ -1,0 +1,39 @@
+mutation CreateBulkEntries($input: BulkEntryInput!) {
+  createBulkEntries(input: $input) {
+    total
+    successCount
+    errorCount
+    results {
+      entry {
+        id
+        quantity
+        price
+        startTime
+        createdAt
+        updatedAt
+        supplier {
+          id
+          name
+          ruc
+          district
+          province
+          department
+          productCount
+          createdAt
+          updatedAt
+        }
+        product {
+          id
+          title
+        }
+      }
+      errors {
+        index
+        field
+        message
+        ruc
+        productId
+      }
+    }
+  }
+}

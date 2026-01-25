@@ -18,6 +18,33 @@ export type Scalars = {
   DateTimeISO: { input: any; output: any; }
 };
 
+export type BulkEntryError = {
+  __typename?: 'BulkEntryError';
+  field: Scalars['String']['output'];
+  index?: Maybe<Scalars['Int']['output']>;
+  message: Scalars['String']['output'];
+  productId?: Maybe<Scalars['Float']['output']>;
+  ruc?: Maybe<Scalars['String']['output']>;
+};
+
+export type BulkEntryInput = {
+  entries: Array<EntryInput>;
+};
+
+export type BulkEntryResponse = {
+  __typename?: 'BulkEntryResponse';
+  errorCount: Scalars['Int']['output'];
+  results: Array<BulkEntryResult>;
+  successCount: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
+};
+
+export type BulkEntryResult = {
+  __typename?: 'BulkEntryResult';
+  entry?: Maybe<Entry>;
+  errors?: Maybe<Array<BulkEntryError>>;
+};
+
 export type Entry = {
   __typename?: 'Entry';
   createdAt: Scalars['DateTimeISO']['output'];
@@ -91,6 +118,7 @@ export type IncomeResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createBulkEntries: BulkEntryResponse;
   createEntry: EntryResponse;
   createProduct: ProductResponse;
   createSupplier: SupplierResponse;
@@ -105,6 +133,11 @@ export type Mutation = {
   updateEntry: EntryResponse;
   updateProduct: ProductResponse;
   updateWithdrawal: WithdrawalResponse;
+};
+
+
+export type MutationCreateBulkEntriesArgs = {
+  input: BulkEntryInput;
 };
 
 
@@ -419,6 +452,13 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
+export type CreateBulkEntriesMutationVariables = Exact<{
+  input: BulkEntryInput;
+}>;
+
+
+export type CreateBulkEntriesMutation = { __typename?: 'Mutation', createBulkEntries: { __typename?: 'BulkEntryResponse', total: number, successCount: number, errorCount: number, results: Array<{ __typename?: 'BulkEntryResult', entry?: { __typename?: 'Entry', id: number, quantity: number, price: number, startTime: any, createdAt: any, updatedAt: any, supplier: { __typename?: 'Supplier', id: number, name: string, ruc?: string | null, district?: string | null, province?: string | null, department?: string | null, productCount: number, createdAt: any, updatedAt: any }, product: { __typename?: 'Product', id: number, title: string } } | null, errors?: Array<{ __typename?: 'BulkEntryError', index?: number | null, field: string, message: string, ruc?: string | null, productId?: number | null }> | null }> } };
+
 export type CreateEntryMutationVariables = Exact<{
   input: EntryInput;
 }>;
@@ -614,6 +654,73 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const CreateBulkEntriesDocument = gql`
+    mutation CreateBulkEntries($input: BulkEntryInput!) {
+  createBulkEntries(input: $input) {
+    total
+    successCount
+    errorCount
+    results {
+      entry {
+        id
+        quantity
+        price
+        startTime
+        createdAt
+        updatedAt
+        supplier {
+          id
+          name
+          ruc
+          district
+          province
+          department
+          productCount
+          createdAt
+          updatedAt
+        }
+        product {
+          id
+          title
+        }
+      }
+      errors {
+        index
+        field
+        message
+        ruc
+        productId
+      }
+    }
+  }
+}
+    `;
+export type CreateBulkEntriesMutationFn = Apollo.MutationFunction<CreateBulkEntriesMutation, CreateBulkEntriesMutationVariables>;
+
+/**
+ * __useCreateBulkEntriesMutation__
+ *
+ * To run a mutation, you first call `useCreateBulkEntriesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBulkEntriesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBulkEntriesMutation, { data, loading, error }] = useCreateBulkEntriesMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateBulkEntriesMutation(baseOptions?: Apollo.MutationHookOptions<CreateBulkEntriesMutation, CreateBulkEntriesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBulkEntriesMutation, CreateBulkEntriesMutationVariables>(CreateBulkEntriesDocument, options);
+      }
+export type CreateBulkEntriesMutationHookResult = ReturnType<typeof useCreateBulkEntriesMutation>;
+export type CreateBulkEntriesMutationResult = Apollo.MutationResult<CreateBulkEntriesMutation>;
+export type CreateBulkEntriesMutationOptions = Apollo.BaseMutationOptions<CreateBulkEntriesMutation, CreateBulkEntriesMutationVariables>;
 export const CreateEntryDocument = gql`
     mutation CreateEntry($input: EntryInput!) {
   createEntry(input: $input) {
