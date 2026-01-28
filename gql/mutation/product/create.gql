@@ -1,0 +1,28 @@
+mutation BulkCreateProducts($input: ProductBulkCreateInput!) {
+  bulkCreateProducts(input: $input) {
+    errors {
+      index
+      field
+      message
+    }
+    results {
+      index
+      product {
+        id
+        title
+        description
+        unitOfMeasurement
+        materialType
+        createdAt
+        updatedAt
+      }
+      error {
+        index
+        field
+        message
+      }
+    }
+    totalCreated
+    totalFailed
+  }
+}
