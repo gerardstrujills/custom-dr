@@ -172,20 +172,6 @@ const ProductCreate = ({ isOpen, handleClose }: Props) => {
         // Mostrar éxito si se crearon productos
         if (result.totalCreated > 0) {
           setBulkSuccess(true);
-
-          // Limpiar productos exitosos del store
-          setTimeout(() => {
-            const failedIndices = result.results
-              .filter((r) => !r.product)
-              .map((r) => r.index);
-
-            // Mantener solo los productos que fallaron
-            const newProducts = products.filter((_, index) =>
-              failedIndices.includes(index),
-            );
-
-            useProductStore.getState().setProducts(newProducts);
-          }, 2000);
         }
 
         // Si todos fallaron, mostrar mensaje

@@ -31,12 +31,14 @@ export const useExcelProductParser = () => {
             const sheet = workbook.Sheets[sheetName];
             const rows: ExcelRow[] = XLSX.utils.sheet_to_json(sheet);
 
+            // En useExcelProductParser.ts
             const parsedProducts: ProductData[] = rows.map((row) => {
-              const titulo = row.titulo;
-              const descripcion = row.descripcion;
-              const um = row.um;
-              const tipomaterial = row.tipomaterial;
+              const titulo = row.titulo?.toString() || ""; // Asegurar que sea string
+              const descripcion = row.descripcion?.toString() || "";
+              const um = row.um?.toString() || "";
+              const tipomaterial = row.tipomaterial?.toString() || "";
 
+              // NO recortar aquí, el backend se encarga
               return {
                 titulo,
                 descripcion,
@@ -44,7 +46,6 @@ export const useExcelProductParser = () => {
                 tipomaterial,
               };
             });
-
             setProducts(parsedProducts);
             resolve(parsedProducts);
           } catch (error) {
