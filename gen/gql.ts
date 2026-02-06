@@ -52,6 +52,32 @@ export type BulkProductItemResponse = {
   product?: Maybe<Product>;
 };
 
+export type BulkWithdrawalError = {
+  __typename?: 'BulkWithdrawalError';
+  field: Scalars['String']['output'];
+  index?: Maybe<Scalars['Int']['output']>;
+  message: Scalars['String']['output'];
+  productId?: Maybe<Scalars['Float']['output']>;
+};
+
+export type BulkWithdrawalInput = {
+  withdrawals: Array<WithdrawalInput>;
+};
+
+export type BulkWithdrawalResponse = {
+  __typename?: 'BulkWithdrawalResponse';
+  errorCount: Scalars['Int']['output'];
+  results: Array<BulkWithdrawalResult>;
+  successCount: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
+};
+
+export type BulkWithdrawalResult = {
+  __typename?: 'BulkWithdrawalResult';
+  errors?: Maybe<Array<BulkWithdrawalError>>;
+  withdrawal?: Maybe<Withdrawal>;
+};
+
 export type Entry = {
   __typename?: 'Entry';
   createdAt: Scalars['DateTimeISO']['output'];
@@ -127,6 +153,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   bulkCreateProducts: ProductBulkResponse;
   createBulkEntries: BulkEntryResponse;
+  createBulkWithdrawals: BulkWithdrawalResponse;
   createEntry: EntryResponse;
   createProduct: ProductResponse;
   createSupplier: SupplierResponse;
@@ -151,6 +178,11 @@ export type MutationBulkCreateProductsArgs = {
 
 export type MutationCreateBulkEntriesArgs = {
   input: BulkEntryInput;
+};
+
+
+export type MutationCreateBulkWithdrawalsArgs = {
+  input: BulkWithdrawalInput;
 };
 
 
@@ -418,6 +450,7 @@ export type Withdrawal = {
   createdAt: Scalars['DateTimeISO']['output'];
   endTime: Scalars['DateTimeISO']['output'];
   id: Scalars['Int']['output'];
+  product?: Maybe<Product>;
   productId?: Maybe<Scalars['Int']['output']>;
   quantity: Scalars['Float']['output'];
   title?: Maybe<Scalars['String']['output']>;
@@ -554,6 +587,13 @@ export type CreateSupplierRucMutationVariables = Exact<{
 
 
 export type CreateSupplierRucMutation = { __typename?: 'Mutation', createSupplierRuc: { __typename?: 'SupplierResponse', supplier?: { __typename?: 'Supplier', id: number } | null, errors?: Array<{ __typename?: 'SupplierFieldError', field: string, message: string }> | null } };
+
+export type CreateBulkWithdrawalsMutationVariables = Exact<{
+  input: BulkWithdrawalInput;
+}>;
+
+
+export type CreateBulkWithdrawalsMutation = { __typename?: 'Mutation', createBulkWithdrawals: { __typename?: 'BulkWithdrawalResponse', total: number, successCount: number, errorCount: number, results: Array<{ __typename?: 'BulkWithdrawalResult', withdrawal?: { __typename?: 'Withdrawal', id: number, title?: string | null, quantity: number, endTime: any, createdAt: any, updatedAt: any } | null, errors?: Array<{ __typename?: 'BulkWithdrawalError', index?: number | null, field: string, message: string, productId?: number | null }> | null }> } };
 
 export type CreateWithdrawalMutationVariables = Exact<{
   input: WithdrawalInput;
@@ -1105,6 +1145,57 @@ export function useCreateSupplierRucMutation(baseOptions?: Apollo.MutationHookOp
 export type CreateSupplierRucMutationHookResult = ReturnType<typeof useCreateSupplierRucMutation>;
 export type CreateSupplierRucMutationResult = Apollo.MutationResult<CreateSupplierRucMutation>;
 export type CreateSupplierRucMutationOptions = Apollo.BaseMutationOptions<CreateSupplierRucMutation, CreateSupplierRucMutationVariables>;
+export const CreateBulkWithdrawalsDocument = gql`
+    mutation CreateBulkWithdrawals($input: BulkWithdrawalInput!) {
+  createBulkWithdrawals(input: $input) {
+    total
+    successCount
+    errorCount
+    results {
+      withdrawal {
+        id
+        title
+        quantity
+        endTime
+        createdAt
+        updatedAt
+      }
+      errors {
+        index
+        field
+        message
+        productId
+      }
+    }
+  }
+}
+    `;
+export type CreateBulkWithdrawalsMutationFn = Apollo.MutationFunction<CreateBulkWithdrawalsMutation, CreateBulkWithdrawalsMutationVariables>;
+
+/**
+ * __useCreateBulkWithdrawalsMutation__
+ *
+ * To run a mutation, you first call `useCreateBulkWithdrawalsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBulkWithdrawalsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBulkWithdrawalsMutation, { data, loading, error }] = useCreateBulkWithdrawalsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateBulkWithdrawalsMutation(baseOptions?: Apollo.MutationHookOptions<CreateBulkWithdrawalsMutation, CreateBulkWithdrawalsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBulkWithdrawalsMutation, CreateBulkWithdrawalsMutationVariables>(CreateBulkWithdrawalsDocument, options);
+      }
+export type CreateBulkWithdrawalsMutationHookResult = ReturnType<typeof useCreateBulkWithdrawalsMutation>;
+export type CreateBulkWithdrawalsMutationResult = Apollo.MutationResult<CreateBulkWithdrawalsMutation>;
+export type CreateBulkWithdrawalsMutationOptions = Apollo.BaseMutationOptions<CreateBulkWithdrawalsMutation, CreateBulkWithdrawalsMutationVariables>;
 export const CreateWithdrawalDocument = gql`
     mutation CreateWithdrawal($input: WithdrawalInput!) {
   createWithdrawal(input: $input) {

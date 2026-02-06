@@ -1,5 +1,4 @@
 "use client";
-
 import { withApollo } from "@/apollo/withApollo";
 import Container from "@/components/Container";
 import { useWithdrawalFiltersStore } from "@/components/stores/useWithdrawalsFiltersStore";
@@ -18,6 +17,7 @@ import { useMeQuery, useWithdrawalsQuery } from "@/gen/gql";
 import { FilterX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import * as XLSX from "xlsx";
 
 const Page = () => {
   const {
@@ -49,7 +49,7 @@ const Page = () => {
 
   const handleFilterChange = (
     key: keyof typeof selectedFilters,
-    value: string
+    value: string,
   ) => {
     setSelectedFilters({
       ...selectedFilters,
@@ -59,6 +59,33 @@ const Page = () => {
 
   const handleClearFilters = () => {
     resetFilters();
+  };
+
+  const handleDownloadXLSX = () => {
+    const rows = data?.withdrawals ?? [];
+    if (!rows.length) return;
+
+    const exportData = rows.map((w) => ({
+      ID: w.id,
+      Titulo: w.title ?? "",
+      Cantidad: w.quantity,
+      "Hora Fin": w.endTime ? new Date(w.endTime).toLocaleString() : "",
+      "Creado En": w.createdAt ? new Date(w.createdAt).toLocaleString() : "",
+
+      // Producto (anidado)
+      "Producto ID": w.product.id,
+      "Producto Titulo": w.product.title,
+      "Producto Descripcion": w.product.description ?? "",
+      "Unidad de Medida": w.product.unitOfMeasurement,
+      "Tipo de Material": w.product.materialType,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Salidas");
+
+    const fileName = `salidas_${new Date().toISOString().slice(0, 10)}.xlsx`;
+    XLSX.writeFile(wb, fileName);
   };
 
   useEffect(() => {
@@ -174,6 +201,14 @@ const Page = () => {
                 >
                   <FilterX className="h-4 w-4 mr-2" />
                   Limpiar
+                </Button>
+
+                <Button
+                  onClick={handleDownloadXLSX}
+                  className="whitespace-nowrap"
+                  disabled={loading || !data?.withdrawals?.length}
+                >
+                  Descargar XLSX
                 </Button>
               </div>
             </div>

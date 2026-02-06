@@ -1,4 +1,3 @@
-// app/stocks/page.tsx
 "use client";
 import { withApollo } from "@/apollo/withApollo";
 import Container from "@/components/Container";
@@ -18,6 +17,7 @@ import { useMeQuery, useStockQuery } from "@/gen/gql";
 import { FilterX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import * as XLSX from "xlsx";
 
 const Page = () => {
   const {
@@ -50,7 +50,7 @@ const Page = () => {
 
   const handleFilterChange = (
     key: keyof typeof selectedFilters,
-    value: string
+    value: string,
   ) => {
     setSelectedFilters({
       ...selectedFilters,
@@ -60,6 +60,37 @@ const Page = () => {
 
   const handleClearFilters = () => {
     resetFilters();
+  };
+
+  const handleDownloadXLSX = () => {
+    const rows = data?.stock ?? [];
+
+    // Si no hay data, no descargues
+    if (!rows.length) return;
+
+    // Mapeo a columnas "bonitas" para Excel
+    const exportData = rows.map((item) => ({
+      ID: item.id,
+      Titulo: item.title,
+      Descripcion: item.description ?? "",
+      "Unidad de Medida": item.unitOfMeasurement,
+      "Tipo de Material": item.materialType,
+      "Stock Total": item.totalStock,
+      "Precio Promedio": item.averagePrice,
+      "Valor Total": item.totalValue,
+      "Creado En": item.createdAt
+        ? new Date(item.createdAt).toLocaleString()
+        : "",
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Stock");
+
+    // Nombre con timestamp simple
+    const fileName = `stock_${new Date().toISOString().slice(0, 10)}.xlsx`;
+
+    XLSX.writeFile(wb, fileName);
   };
 
   useEffect(() => {
@@ -178,6 +209,13 @@ const Page = () => {
                 >
                   <FilterX className="h-4 w-4 mr-2" />
                   Limpiar
+                </Button>
+                <Button
+                  onClick={handleDownloadXLSX}
+                  className="whitespace-nowrap"
+                  disabled={loading || !data?.stock?.length}
+                >
+                  Descargar XLSX
                 </Button>
               </div>
             </div>

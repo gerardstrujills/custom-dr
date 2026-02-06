@@ -1,0 +1,23 @@
+mutation CreateBulkWithdrawals($input: BulkWithdrawalInput!) {
+  createBulkWithdrawals(input: $input) {
+    total
+    successCount
+    errorCount
+    results {
+      withdrawal {
+        id
+        title
+        quantity
+        endTime
+        createdAt
+        updatedAt
+      }
+      errors {
+        index
+        field
+        message
+        productId
+      }
+    }
+  }
+}

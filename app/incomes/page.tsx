@@ -1,5 +1,4 @@
 "use client";
-
 import { withApollo } from "@/apollo/withApollo";
 import Container from "@/components/Container";
 import IncomeDateRangePicker from "@/components/incomes/IncomeDateRangePicker";
@@ -18,6 +17,7 @@ import { useIncomesQuery, useMeQuery } from "@/gen/gql";
 import { FilterX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import * as XLSX from "xlsx";
 
 const Page = () => {
   const {
@@ -49,12 +49,47 @@ const Page = () => {
 
   const handleFilterChange = (
     key: keyof typeof selectedFilters,
-    value: string
+    value: string,
   ) => {
     setSelectedFilters({
       ...selectedFilters,
       [key]: value === "all" ? undefined : value,
     });
+  };
+
+  const handleDownloadXLSX = () => {
+    const rows = data?.incomes ?? [];
+    if (!rows.length) return;
+
+    const exportData = rows.map((i) => ({
+      ID: i.id,
+      Cantidad: i.quantity,
+      Precio: i.price,
+      "Hora Inicio": i.startTime ? new Date(i.startTime).toLocaleString() : "",
+      "Creado En": i.createdAt ? new Date(i.createdAt).toLocaleString() : "",
+
+      // Producto
+      "Producto ID": i.product.id,
+      "Producto Titulo": i.product.title,
+      "Producto Descripcion": i.product.description ?? "",
+      "Unidad de Medida": i.product.unitOfMeasurement,
+      "Tipo de Material": i.product.materialType,
+
+      // Proveedor
+      "Proveedor ID": i.supplier.id,
+      Proveedor: i.supplier.name,
+      RUC: i.supplier.ruc ?? "",
+      Distrito: i.supplier.district ?? "",
+      Provincia: i.supplier.province ?? "",
+      Departamento: i.supplier.department ?? "",
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Entradas");
+
+    const fileName = `entradas_${new Date().toISOString().slice(0, 10)}.xlsx`;
+    XLSX.writeFile(wb, fileName);
   };
 
   const handleClearFilters = () => {
@@ -174,6 +209,13 @@ const Page = () => {
                 >
                   <FilterX className="h-4 w-4 mr-2" />
                   Limpiar
+                </Button>
+                <Button
+                  onClick={handleDownloadXLSX}
+                  className="whitespace-nowrap"
+                  disabled={loading || !data?.incomes?.length}
+                >
+                  Descargar XLSX
                 </Button>
               </div>
             </div>
