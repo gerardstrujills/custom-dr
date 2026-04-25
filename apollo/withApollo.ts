@@ -11,7 +11,7 @@ import { NextPageContext } from "next";
 import { createWithApollo } from "./createWithApollo";
 
 const httpLink = new HttpLink({
-  uri: "https://gql-customs-dr-production-4340.up.railway.app/graphql",
+  uri: "https://gql-customs-dr-production-75ae.up.railway.app/graphql",
   credentials: "include",
   fetch,
 });
